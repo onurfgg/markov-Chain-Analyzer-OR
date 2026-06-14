@@ -4,69 +4,209 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markov Zinciri Simülatörü</title>
+    <!-- Sosyal Medya İkonları için FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
+
+        /* Sol Üst Sosyal Medya Butonları */
+        .social-links {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 12px;
         }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            text-decoration: none;
+            color: white;
+            font-size: 20px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .linkedin { background-color: #0077b5; }
+        .github { background-color: #24292e; }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 650px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            transition: transform 0.2s ease;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 10px;
             margin-bottom: 20px;
         }
+
         label {
-            font-weight: bold;
+            font-weight: 600;
             display: block;
-            margin-top: 10px;
-        }
-        input[type="text"], textarea, input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
             margin-top: 15px;
-            font-size: 16px;
-            width: 100%;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-size: 0.95rem;
         }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background-color: #f8fafc;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background-color: #fff;
+        }
+
+        /* Şık Matris Görünümü */
+        .matrix-wrapper {
+            position: relative;
+            padding: 0 15px;
+            margin: 10px 0;
+        }
+
+        .matrix-wrapper::before, .matrix-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 12px;
+            border: 3px solid var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .matrix-wrapper::before {
+            left: 0;
+            border-right: none;
+        }
+
+        .matrix-wrapper::after {
+            right: 0;
+            border-left: none;
+        }
+
+        textarea#matrix {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            background: transparent;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: center;
+            resize: none;
+            outline: none;
+            font-weight: bold;
+            color: var(--primary-color);
+            letter-spacing: 2px;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
         button:hover {
             background-color: #2980b9;
         }
-        .result-box {
-            background-color: #e8f4f8;
-            padding: 15px;
-            border-left: 4px solid #3498db;
-            margin-top: 15px;
-            border-radius: 4px;
-            white-space: pre-wrap;
-            font-family: monospace;
+
+        button:active {
+            transform: scale(0.98);
         }
+
+        .result-box {
+            background-color: #ebf8ff;
+            padding: 20px;
+            border-left: 5px solid var(--accent-color);
+            margin-top: 20px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #2d3748;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
         .error {
-            color: #e74c3c;
-            font-weight: bold;
+            background-color: #fff5f5;
+            border-left-color: #e53e3e;
+            color: #c53030;
         }
     </style>
 </head>
 <body>
+
+    <div class="social-links">
+        <a href="https://linkedin.com/in/onurfurkangok" target="_blank" class="social-btn linkedin" title="LinkedIn">
+            <i class="fab fa-linkedin-in"></i>
+        </a>
+        <a href="https://github.com/onurfurkangok" target="_blank" class="social-btn github" title="GitHub">
+            <i class="fab fa-github"></i>
+        </a>
+    </div>
 
     <h1>🎲 Markov Zinciri Simülatörü</h1>
 
@@ -76,10 +216,12 @@
         <label for="states">Durumlar (Virgülle ayırın):</label>
         <input type="text" id="states" value="Çalışıyor, Arızalı, Bakımda">
 
-        <label for="matrix">Geçiş Matrisi (Satırları enter, sütunları virgül ile ayırın):</label>
-        <textarea id="matrix" rows="4">0.7, 0.2, 0.1
+        <label for="matrix">Geçiş Matrisi P (Satırları enter, sütunları virgül ile ayırın):</label>
+        <div class="matrix-wrapper">
+            <textarea id="matrix" rows="3">0.7, 0.2, 0.1
 0.0, 0.5, 0.5
 0.4, 0.0, 0.6</textarea>
+        </div>
 
         <button onclick="calculateSteadyState()">Uzun Dönem (Steady-State) Hesapla</button>
         <div id="steadyStateResult" class="result-box" style="display:none;"></div>
@@ -139,21 +281,21 @@
             try {
                 const { states, matrix } = parseInput();
                 
-                // Steady-state için matrisi kendisiyle 100 defa çarpıyoruz (Power Method)
                 let currentP = matrix;
                 for(let i = 0; i < 100; i++) {
                     currentP = multiplyMatrix(currentP, matrix);
                 }
 
-                let output = "Uzun Dönem (Steady-State) Olasılıkları:\n\n";
+                let output = "Uzun Dönem (Steady-State) Olasılıkları (π):\n\n";
                 states.forEach((state, idx) => {
-                    output += `${state}: ${currentP[0][idx].toFixed(4)}\n`;
+                    output += `  ${state}: ${currentP[0][idx].toFixed(4)}\n`;
                 });
                 resultBox.innerHTML = output;
                 resultBox.classList.remove('error');
 
             } catch (error) {
-                resultBox.innerHTML = `<span class="error">${error.message}</span>`;
+                resultBox.innerHTML = `<span class="error"><i class="fas fa-exclamation-triangle"></i> ${error.message}</span>`;
+                resultBox.classList.add('error');
             }
         }
 
@@ -171,7 +313,6 @@
                     throw new Error("Geçersiz başlangıç durumu indeksi.");
                 }
 
-                // Başlangıç durumu vektörünü oluştur (1xN matris)
                 let currentState = new Array(1).fill(0).map(() => new Array(states.length).fill(0));
                 currentState[0][initialIdx] = 1.0;
 
@@ -190,7 +331,8 @@
                 resultBox.classList.remove('error');
 
             } catch (error) {
-                resultBox.innerHTML = `<span class="error">${error.message}</span>`;
+                resultBox.innerHTML = `<span class="error"><i class="fas fa-exclamation-triangle"></i> ${error.message}</span>`;
+                resultBox.classList.add('error');
             }
         }
     </script>
